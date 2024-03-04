@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as faceapi from 'face-api.js';
 import FaceDetectionCSS from './style/FaceDetection.module.css';
 import axios from 'axios';
+import Greeting from './Greeting';
 
 const FaceDetection = () => {
   const videoHeight = 480;
@@ -9,7 +10,6 @@ const FaceDetection = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const intervalRef = useRef(null);
-  const [screenshotURL, setScreenshotURL] = useState(''); 
 
   useEffect(() => {
     const loadModelsAndStartVideo = async () => {
@@ -18,7 +18,7 @@ const FaceDetection = () => {
     };
     loadModelsAndStartVideo();
     return () => {
-      intervalRef.current && clearInterval(intervalRef.current); 
+      intervalRef.current && clearInterval(intervalRef.current);
     };
   }, []);
 
@@ -56,7 +56,7 @@ const FaceDetection = () => {
     if (!videoRef.current) return;
 
     const canvas = faceapi.createCanvasFromMedia(videoRef.current);
-    document.body.appendChild(canvas); 
+    document.body.appendChild(canvas);
     canvasRef.current = canvas;
 
     const displaySize = { width: videoWidth, height: videoHeight };
@@ -86,25 +86,24 @@ const FaceDetection = () => {
     canvas.toBlob(blob => {
       const file = new File([blob], "label.jpg", { type: "image/jpeg" });
       const screenshotURL = URL.createObjectURL(blob);
-      setScreenshotURL(screenshotURL); // Update state with new screenshot URL
       prediction(file);
     }, 'image/jpeg');
   };
 
   const prediction = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
+    // const formData = new FormData();
+    // formData.append('file', file);
 
-    try {
-      const res = await axios.post(import.meta.env.VITE_API+'/prediction', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      console.log(res.data);
-    } catch (error) {
-      console.error('Prediction error', error);
-    }
+    // try {
+    //   const res = await axios.post(import.meta.env.VITE_API + '/prediction', formData, {
+    //     headers: {
+    //       'Content-Type': 'multipart/form-data'
+    //     }
+    //   });
+    //   console.log(res.data);
+    // } catch (error) {
+    //   console.error('Prediction error', error);
+    // }
   };
 
   return (
@@ -113,7 +112,9 @@ const FaceDetection = () => {
         <video ref={videoRef} autoPlay muted height={videoHeight} width={videoWidth} className={FaceDetectionCSS.video}></video>
       </div>
 
-      <img src={screenshotURL}  alt="" />
+      <div>
+          <Greeting/>
+      </div>
     </>
   );
 };
