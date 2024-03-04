@@ -9,7 +9,7 @@ const FaceDetection = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const intervalRef = useRef(null);
-  const [screenshotURL, setScreenshotURL] = useState(''); // Added state for screenshot URL
+  const [screenshotURL, setScreenshotURL] = useState(''); 
 
   useEffect(() => {
     const loadModelsAndStartVideo = async () => {
@@ -18,7 +18,7 @@ const FaceDetection = () => {
     };
     loadModelsAndStartVideo();
     return () => {
-      intervalRef.current && clearInterval(intervalRef.current); // Cleanup interval on component unmount
+      intervalRef.current && clearInterval(intervalRef.current); 
     };
   }, []);
 
@@ -56,7 +56,7 @@ const FaceDetection = () => {
     if (!videoRef.current) return;
 
     const canvas = faceapi.createCanvasFromMedia(videoRef.current);
-    document.body.appendChild(canvas); // Append canvas to body
+    document.body.appendChild(canvas); 
     canvasRef.current = canvas;
 
     const displaySize = { width: videoWidth, height: videoHeight };
@@ -70,7 +70,7 @@ const FaceDetection = () => {
       if (detections.length > 0) {
         videoScreenshot();
       }
-    }, 2000);
+    }, 3000);
   };
 
   const videoScreenshot = () => {
