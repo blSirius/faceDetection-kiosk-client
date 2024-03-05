@@ -8,7 +8,6 @@ function Greeting({ getFaceDataSignal }) {
         try {
             const data = await axios.get(import.meta.env.VITE_API + '/fetch_face_data');
             setFaceData(data.data);
-            console.log('fetch');
         } catch (error) {
             console.log(error);
         }
