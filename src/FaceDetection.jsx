@@ -93,21 +93,21 @@ function FaceDetection(){
   };
 
   const prediction = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
+    // const formData = new FormData();
+    // formData.append('file', file);
 
-    try {
-      const res = await axios.post(import.meta.env.VITE_API + '/prediction', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      console.log(res.data);
-      setGetFaceDataSignal(prev => !prev);
+    // try {
+    //   const res = await axios.post(import.meta.env.VITE_API + '/prediction', formData, {
+    //     headers: {
+    //       'Content-Type': 'multipart/form-data'
+    //     }
+    //   });
+    //   console.log(res.data);
+    //   setGetFaceDataSignal(prev => !prev);
 
-    } catch (error) {
-      console.error('Prediction error', error);
-    }
+    // } catch (error) {
+    //   console.error('Prediction error', error);
+    // }
   };
 
   return (
