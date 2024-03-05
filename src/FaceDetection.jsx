@@ -4,12 +4,14 @@ import FaceDetectionCSS from './style/FaceDetection.module.css';
 import axios from 'axios';
 import Greeting from './Greeting';
 
-const FaceDetection = () => {
+function FaceDetection(){
   const videoHeight = 480;
   const videoWidth = 640;
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const intervalRef = useRef(null);
+
+  const [getFaceDataSignal, setGetFaceDataSignal] = useState(false);
 
   useEffect(() => {
     const loadModelsAndStartVideo = async () => {
@@ -91,19 +93,21 @@ const FaceDetection = () => {
   };
 
   const prediction = async (file) => {
-    // const formData = new FormData();
-    // formData.append('file', file);
+    const formData = new FormData();
+    formData.append('file', file);
 
-    // try {
-    //   const res = await axios.post(import.meta.env.VITE_API + '/prediction', formData, {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data'
-    //     }
-    //   });
-    //   console.log(res.data);
-    // } catch (error) {
-    //   console.error('Prediction error', error);
-    // }
+    try {
+      const res = await axios.post(import.meta.env.VITE_API + '/prediction', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log(res.data);
+      setGetFaceDataSignal(prev => !prev);
+
+    } catch (error) {
+      console.error('Prediction error', error);
+    }
   };
 
   return (
@@ -113,7 +117,7 @@ const FaceDetection = () => {
       </div>
 
       <div>
-          <Greeting/>
+        <Greeting getFaceDataSignal={getFaceDataSignal} />
       </div>
     </>
   );

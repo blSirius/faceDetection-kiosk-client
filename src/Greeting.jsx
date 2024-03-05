@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-// import GreetingCSS from './style/Greeting.module.css';
-
-function Greeting() {
+export function Greeting({ getFaceDataSignal }) {
     const [faceData, setFaceData] = useState([]);
-
-    useEffect(() => {
-        fetchFaceData();
-    }, []);
 
     const fetchFaceData = async () => {
         try {
             const data = await axios.get(import.meta.env.VITE_API + '/fetch_face_data');
             setFaceData(data.data);
+            console.log('fetch');
         } catch (error) {
             console.log(error);
         }
     };
+
+    useEffect(() => {
+        fetchFaceData();
+    }, [getFaceDataSignal]);
 
     return (
         <>
