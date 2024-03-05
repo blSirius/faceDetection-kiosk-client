@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export function Greeting({ getFaceDataSignal }) {
+function Greeting({ getFaceDataSignal }) {
     const [faceData, setFaceData] = useState([]);
 
     const fetchFaceData = async () => {
