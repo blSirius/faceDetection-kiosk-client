@@ -24,6 +24,7 @@ function Greeting({ getFaceDataSignal }) {
                 (
                     <div> {faceData.map((data, index) => (
                         <div key={index}>
+                            <div>{data.id}</div>
                             <div>{data.name}</div>
                             <div>{data.expression}</div>
                             <div>{data.age}</div>
