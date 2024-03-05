@@ -6,7 +6,7 @@ function Greeting({ getFaceDataSignal }) {
 
     const fetchFaceData = async () => {
         try {
-            const data = await axios.get(import.meta.env.VITE_API + '/fetch_face_data');
+            const data = await axios.get(import.meta.env.VITE_SERVER_API + '/fetch_face_data');
             setFaceData(data.data);
         } catch (error) {
             console.log(error);
@@ -31,7 +31,7 @@ function Greeting({ getFaceDataSignal }) {
                             <div>{data.date}</div>
                             <div>{data.time}</div>
                             <div>{data.path}</div>
-                            <div><img src={`${import.meta.env.VITE_API}/fetch_face_image/${encodeURIComponent(data.path)}`} alt={data.name} /></div>
+                            <div><img src={`${import.meta.env.VITE_SERVER_API}/fetch_face_image/${encodeURIComponent(data.path)}`} alt={data.name} /></div>
                             <hr />
                         </div>
                     ))}

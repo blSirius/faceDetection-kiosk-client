@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as faceapi from 'face-api.js';
-import FaceDetectionCSS from './style/FaceDetection.module.css';
 import axios from 'axios';
 import Greeting from './Greeting';
 
-function FaceDetection(){
+function FaceDetection() {
   const videoHeight = 480;
   const videoWidth = 640;
   const videoRef = useRef(null);
@@ -58,6 +57,7 @@ function FaceDetection(){
     if (!videoRef.current) return;
 
     const canvas = faceapi.createCanvasFromMedia(videoRef.current);
+    canvas.className = "absolute top-0 left-1/2 transform -translate-x-1/2 z-10";
     document.body.appendChild(canvas);
     canvasRef.current = canvas;
 
@@ -72,7 +72,7 @@ function FaceDetection(){
       if (detections.length > 0) {
         videoScreenshot();
       }
-    }, 3000);
+    }, 2000);
   };
 
   const videoScreenshot = () => {
@@ -87,7 +87,6 @@ function FaceDetection(){
 
     canvas.toBlob(blob => {
       const file = new File([blob], "label.jpg", { type: "image/jpeg" });
-      const screenshotURL = URL.createObjectURL(blob);
       prediction(file);
     }, 'image/jpeg');
   };
@@ -97,7 +96,7 @@ function FaceDetection(){
     formData.append('file', file);
 
     try {
-      const res = await axios.post(import.meta.env.VITE_API + '/prediction', formData, {
+      const res = await axios.post(import.meta.env.VITE_SERVER_API + '/prediction', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -112,8 +111,8 @@ function FaceDetection(){
 
   return (
     <>
-      <div className={FaceDetectionCSS.frame}>
-        <video ref={videoRef} autoPlay muted height={videoHeight} width={videoWidth} className={FaceDetectionCSS.video}></video>
+      <div className='flex justify-center'>
+        <video ref={videoRef} autoPlay muted height={videoHeight} width={videoWidth} className='z-0'></video>
       </div>
 
       <div>
