@@ -31,6 +31,7 @@ function Greeting({ getFaceDataSignal }) {
                             <div>{data.date}</div>
                             <div>{data.time}</div>
                             <div>{data.path}</div>
+                            <div>{data.greeting}</div>
                             <div><img src={`${import.meta.env.VITE_SERVER_API}/fetch_face_image/${encodeURIComponent(data.path)}`} alt={data.name} /></div>
                             <hr />
                         </div>
