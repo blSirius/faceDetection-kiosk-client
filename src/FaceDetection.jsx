@@ -4,11 +4,13 @@ import axios from 'axios';
 import Greeting from './Greeting';
 
 function FaceDetection() {
-  const videoHeight = 480;
-  const videoWidth = 640;
+
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const intervalRef = useRef(null);
+  const intervalRefA = useRef(null);
+  const intervalRefB = useRef(null);
+  const videoHeight = 480;
+  const videoWidth = 640;
 
   const [getFaceDataSignal, setGetFaceDataSignal] = useState(false);
 
@@ -19,7 +21,8 @@ function FaceDetection() {
     };
     loadModelsAndStartVideo();
     return () => {
-      intervalRef.current && clearInterval(intervalRef.current);
+      intervalRefA.current && clearInterval(intervalRefA.current);
+      intervalRefB.current && clearInterval(intervalRefB.current);
     };
   }, []);
 
@@ -48,6 +51,7 @@ function FaceDetection() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
       videoRef.current.srcObject = stream;
+
     } catch (error) {
       console.error('Failed to start video stream', error);
     }
@@ -57,22 +61,26 @@ function FaceDetection() {
     if (!videoRef.current) return;
 
     const canvas = faceapi.createCanvasFromMedia(videoRef.current);
-    canvas.className = "absolute top-0 left-1/2 transform -translate-x-1/2 z-10";
+    canvas.className = "absolute top-0 left-1/2 transform -translate-x-1/2 z-10 w-full h-full object-cover";
     document.body.appendChild(canvas);
     canvasRef.current = canvas;
 
     const displaySize = { width: videoWidth, height: videoHeight };
     faceapi.matchDimensions(canvas, displaySize);
 
-    intervalRef.current = setInterval(async () => {
+    intervalRefA.current = setInterval(async () => {
+      const detections = await faceapi.detectAllFaces(videoRef.current, new faceapi.SsdMobilenetv1Options());
+      if (detections.length > 0) {
+        videoScreenshot();
+      }
+    }, 3000);
+
+    intervalRefB.current = setInterval(async () => {
       const detections = await faceapi.detectAllFaces(videoRef.current, new faceapi.SsdMobilenetv1Options());
       const resizedDetections = faceapi.resizeResults(detections, displaySize);
       canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
       faceapi.draw.drawDetections(canvas, resizedDetections);
-      if (detections.length > 0) {
-        videoScreenshot();
-      }
-    }, 2000);
+    }, 100);
   };
 
   const videoScreenshot = () => {
@@ -111,13 +119,13 @@ function FaceDetection() {
 
   return (
     <>
-      <div className='flex justify-center'>
-        <video ref={videoRef} autoPlay muted height={videoHeight} width={videoWidth} className='z-0'></video>
+
+      <div className='flex justify-center items-center h-screen w-screen overflow-hidden'>
+        <video ref={videoRef} autoPlay muted className='w-full h-full object-cover z-0'></video>
       </div>
 
-      <div>
-        <Greeting getFaceDataSignal={getFaceDataSignal} />
-      </div>
+
+      <Greeting getFaceDataSignal={getFaceDataSignal} />
     </>
   );
 };
