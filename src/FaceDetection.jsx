@@ -61,7 +61,7 @@ function FaceDetection() {
     if (!videoRef.current) return;
 
     const canvas = faceapi.createCanvasFromMedia(videoRef.current);
-    canvas.className = "absolute top-0 left-1/2 transform -translate-x-1/2 z-10 w-full h-full object-cover";
+    canvas.className = "absolute top-0 left-1/2 transform -translate-x-1/2 z-10 h-full object-cover";
     document.body.appendChild(canvas);
     canvasRef.current = canvas;
 
@@ -121,7 +121,7 @@ function FaceDetection() {
     <>
 
       <div className='flex justify-center items-center h-screen w-screen overflow-hidden'>
-        <video ref={videoRef} autoPlay muted className='w-full h-full object-cover z-0'></video>
+        <video ref={videoRef} autoPlay muted className='h-full object-cover z-0'></video>
       </div>
 
 
