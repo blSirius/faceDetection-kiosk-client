@@ -94,7 +94,7 @@ function FaceDetection() {
     ctx.drawImage(videoRef.current, 0, 0, videoWidth, videoHeight);
 
     canvas.toBlob(blob => {
-      const fileName = 'env' + Date.now().toString() + ".jpg";
+      const fileName = 'env-' + Date.now().toString() + ".jpg";
       const file = new File([blob], fileName, { type: "image/jpeg" });
       prediction(file);
     }, 'image/jpeg');
@@ -125,8 +125,7 @@ function FaceDetection() {
         <video ref={videoRef} autoPlay muted className='h-full object-cover z-0'></video>
       </div>
 
-
-      {/* <Greeting getFaceDataSignal={getFaceDataSignal} /> */}
+      <Greeting getFaceDataSignal={getFaceDataSignal} />
     </>
   );
 };
