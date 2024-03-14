@@ -105,22 +105,30 @@ function FaceDetection() {
   };
 
   const prediction = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-
     try {
-      const res = await axios.post(import.meta.env.VITE_SERVER_API + '/prediction', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+      const formData = new FormData();
+      formData.append('file', file);
+      const response = await axios.post(`${import.meta.env.VITE_SERVER_API}/prediction`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
-      console.log(res.data);
+      const newFace = response.data;
+      console.log(newFace);
       setGetFaceDataSignal(prev => !prev);
 
+      if (newFace == null) { return };
+      newFace.forEach(async (face) => {
+        if (face !== "empty") {
+          const text = `hello ${face}`; 
+          const speech = new SpeechSynthesisUtterance(text);
+          // speech.lang = 'th-TH'; 
+          // window.speechSynthesis.speak(speech);
+        }
+      });
     } catch (error) {
       console.error('Prediction error', error);
     }
   };
+
 
   return (
     <>
