@@ -1,17 +1,13 @@
-// Greeting.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { emoji } from './Emoji';
-import Lottie from 'lottie-react';
-
-import animetion from './assets/Animation - 1709720862320.json'
 
 function Greeting({ getFaceDataSignal, newCard }) {
     const [faceData, setFaceData] = useState([]);
 
     const fetchFaceData = async () => {
         try {
-            if(newCard == 0){return}
+            if (newCard == 0) { return }
             const data = await axios.post(import.meta.env.VITE_SERVER_API + '/fetch_face_data', { newCard });
             setFaceData(data.data);
         } catch (error) {

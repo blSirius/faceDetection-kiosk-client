@@ -1,4 +1,4 @@
-import React, { lazy, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as faceapi from 'face-api.js';
 import axios from 'axios';
 import Greeting from './Greeting';
@@ -116,11 +116,8 @@ function FaceDetection() {
 
       console.log(newFace);
 
-      if (newFace == null) { return };
-
       newFace.forEach(async (face) => {
         if (face !== "empty") {
-          setNewCard(newFace.length);
           const sanitizedFace = face.replace(/\s+/g, '');
           const utterance = new SpeechSynthesisUtterance(`ยินดีต้อนรับคุณ${sanitizedFace}`);
           utterance.voice = speechSynthesis.getVoices().find(v => v.name.includes('Premwadee')) || null;
@@ -128,14 +125,16 @@ function FaceDetection() {
           speechSynthesis.speak(utterance);
         }
       });
+
       if (newFace[0] != "empty") {
+        setNewCard(newFace.length);
         setGetFaceDataSignal(prev => !prev);
       }
+
     } catch (error) {
       console.error('Prediction error', error);
     }
   };
-
 
   return (
     <>
