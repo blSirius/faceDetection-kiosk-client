@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { lazy, useEffect, useRef, useState } from 'react';
 import * as faceapi from 'face-api.js';
 import axios from 'axios';
 import Greeting from './Greeting';
@@ -13,6 +13,7 @@ function FaceDetection() {
   const videoWidth = 640;
 
   const [getFaceDataSignal, setGetFaceDataSignal] = useState(false);
+  const [newCard, setNewCard] = useState(0);
 
   useEffect(() => {
     const loadModelsAndStartVideo = async () => {
@@ -112,18 +113,24 @@ function FaceDetection() {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       const newFace = response.data;
+
       console.log(newFace);
-      setGetFaceDataSignal(prev => !prev);
 
       if (newFace == null) { return };
+
       newFace.forEach(async (face) => {
         if (face !== "empty") {
-          const text = `hello ${face}`; 
-          const speech = new SpeechSynthesisUtterance(text);
-          // speech.lang = 'th-TH'; 
-          // window.speechSynthesis.speak(speech);
+          setNewCard(newFace.length);
+          const sanitizedFace = face.replace(/\s+/g, '');
+          const utterance = new SpeechSynthesisUtterance(`ยินดีต้อนรับคุณ${sanitizedFace}`);
+          utterance.voice = speechSynthesis.getVoices().find(v => v.name.includes('Premwadee')) || null;
+          utterance.rate = 1;
+          speechSynthesis.speak(utterance);
         }
       });
+      if (newFace[0] != "empty") {
+        setGetFaceDataSignal(prev => !prev);
+      }
     } catch (error) {
       console.error('Prediction error', error);
     }
@@ -137,7 +144,8 @@ function FaceDetection() {
         <video ref={videoRef} autoPlay muted className='h-full object-cover z-0 scale-x-[-1]'></video>
       </div>
 
-      <Greeting getFaceDataSignal={getFaceDataSignal} />
+      <Greeting getFaceDataSignal={getFaceDataSignal} newCard={newCard} />
+
     </>
   );
 };
