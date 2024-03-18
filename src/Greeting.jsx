@@ -2,28 +2,36 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { emoji } from './Emoji';
 
-// let timeoutID;
+//
+let timeoutID;
+//
 
 function Greeting({ getFaceDataSignal, newCard }) {
     const [faceData, setFaceData] = useState([]);
 
     const fetchFaceData = async () => {
 
-        // if (newCard == 0) {
-        //     return;
-        // }
+        //
+        console.log(newCard);
+        if (newCard == 0) {
+            return;
+        }
+        //
 
         try {
-            // clearTimeout(timeoutID);
+            clearTimeout(timeoutID);
 
             const url = `${import.meta.env.VITE_SERVER_API}/fetch_face_data`;
             const response = await axios.post(url, { newCard });
 
             setFaceData(response.data);
 
-            // timeoutID = setTimeout(() => {
-            //     setFaceData([]);
-            // }, 30000);
+            //
+            timeoutID = setTimeout(() => {
+                setFaceData([]);
+            }, 30000);
+            //
+
         } catch (error) {
             console.log(error);
         }
@@ -33,10 +41,6 @@ function Greeting({ getFaceDataSignal, newCard }) {
     useEffect(() => {
         fetchFaceData();
     }, [getFaceDataSignal]);
-
-    useEffect(() => {
-        fetchFaceData();
-    });
 
     return (
         <>
