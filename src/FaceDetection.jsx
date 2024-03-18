@@ -5,6 +5,16 @@ import Greeting from './Greeting';
 
 function FaceDetection() {
 
+  let time = new Date().toLocaleTimeString();
+  const [currentTime, setCurrentTime] = useState(time);
+
+  const updateTime = async () => {
+    let time = new Date().toLocaleTimeString();
+    setCurrentTime(time);
+  }
+
+  setInterval(updateTime, 1000)
+
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const intervalRefA = useRef(null);
@@ -105,6 +115,7 @@ function FaceDetection() {
     }, 'image/jpeg');
   };
 
+  // Function for making the prediction request
   const prediction = async (file) => {
     try {
       const formData = new FormData();
@@ -116,28 +127,48 @@ function FaceDetection() {
 
       console.log(newFace);
 
-      newFace.forEach(async (face) => {
-        if (face !== "empty") {
-          const sanitizedFace = face.replace(/\s+/g, '');
-          const utterance = new SpeechSynthesisUtterance(`ยินดีต้อนรับคุณ${sanitizedFace}`);
-          utterance.voice = speechSynthesis.getVoices().find(v => v.name.includes('Premwadee')) || null;
-          utterance.rate = 1;
-          speechSynthesis.speak(utterance);
-        }
-      });
-
-      if (newFace[0] != "empty") {
+      if (newFace[0] !== "empty") {
+        greeting(newFace); // Call greeting function if there's a valid response
         setNewCard(newFace.length);
         setGetFaceDataSignal(prev => !prev);
       }
-
     } catch (error) {
       console.error('Prediction error', error);
     }
   };
 
+  const greeting = async (faces) => {
+
+    const getVoices = () => new Promise(resolve => {
+      const voices = speechSynthesis.getVoices();
+      if (voices.length) {
+        resolve(voices);
+      } else {
+        speechSynthesis.onvoiceschanged = () => {
+          resolve(speechSynthesis.getVoices());
+        };
+      }
+    });
+
+    const voices = await getVoices();
+
+    faces.forEach(face => {
+      if (face !== "empty") {
+        const sanitizedFace = face.replace(/\s+/g, '');
+        const utterance = new SpeechSynthesisUtterance(`ยินดีต้อนรับคุณ${sanitizedFace}`);
+        utterance.voice = voices.find(v => v.name.includes('Premwadee')) || null;
+        utterance.rate = 1;
+        speechSynthesis.speak(utterance);
+      }
+    });
+  };
+
   return (
     <>
+
+      <div className='text-center z-10 absolute w-full text-2xl mt-4 font-bold' >
+        {currentTime}
+      </div>
 
       <div className='flex justify-center items-center h-screen w-screen overflow-hidden'>
         <video ref={videoRef} autoPlay muted className='h-full object-cover z-0 scale-x-[-1]'></video>
