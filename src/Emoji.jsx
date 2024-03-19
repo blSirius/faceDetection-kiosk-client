@@ -6,7 +6,7 @@ import sad from './emotionImage/angry.jpg';
 import angry from './emotionImage/angry.jpg';
 import disgusted from './emotionImage/disgusted.jpg';
 import fearful from './emotionImage/fearful.jpg';
-import surprise from './emotionImage/surprised.jpg'
+import surprised from './emotionImage/surprised.jpg'
 
 export const emoji = (expression) => {
     if (expression === 'neutral') {

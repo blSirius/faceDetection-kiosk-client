@@ -128,7 +128,7 @@ function FaceDetection() {
       console.log(newFace);
 
       if (newFace[0] !== "empty") {
-        greeting(newFace); // Call greeting function if there's a valid response
+        greeting(newFace);
         setNewCard(newFace.length);
         setGetFaceDataSignal(prev => !prev);
       }
